@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <libsx.h>
+#include "vue.h"
 #include "data.h"
 #include "callbacks.h"
 
@@ -10,46 +10,38 @@
 Widget textBoxMatrice; // la zone d’affichage
 Widget textBoxVecteur;
 Widget ZoneResultat; // la zone d’affichage
-Widget menu;
 
 /* Rôle: création et assemblage des widgets */
 void init_display(int argc, char *argv[], void *d)
 {
-    (void)argc;
-    (void)argv;
-    (void)d;
+    Widget MenuA = MakeMenu("Charger un fichier");
+    MakeMenuItem(MenuA, "Matrice A", ChargerMatrice, d);
+    MakeMenuItem(MenuA, "Vecteur B", ChargerVecteur, d);
 
     Widget BQuit;    // le bouton Quit pour terminer le programme
     Widget BResolve; // le bouton pour faire la resolution par pivot de gauss
+    Widget BFichierMatrice;
+    Widget BFichierVecteur;
+
+    textBoxMatrice = MakeTextWidget("Matrice", 0, 0, TAILLEZONEAFFICHAGEL, TAILLEZONEAFFICHAGEH);
+    textBoxVecteur = MakeTextWidget("Vecteur", 0, 0, 100, TAILLEZONEAFFICHAGEH);
+    ZoneResultat = MakeTextWidget("Solution", 0, 0, TAILLEZONEAFFICHAGEL, TAILLEZONEAFFICHAGEH);
 
     // créer les composants graphiques
     BQuit = MakeButton(" Quit ", quit, NULL);
-    BResolve = MakeButton("Resoudre", resolution, NULL);
-
-    textBoxMatrice = MakeTextWidget(NULL, 0, 0, TAILLEZONEAFFICHAGEL, TAILLEZONEAFFICHAGEH); // Text/fichier ou nn/modifiable?/LARGEUR/hAUTEUR
-    textBoxVecteur = MakeTextWidget(NULL, 0, 0, 100, TAILLEZONEAFFICHAGEH);
-    ZoneResultat = MakeTextWidget(NULL, 0, 0, TAILLEZONEAFFICHAGEL, TAILLEZONEAFFICHAGEH);
-
-    Widget labelEntre = MakeLabel("Systeme d'equation d'entrée");
-    Widget labelSortie = MakeLabel("Systeme d'equation aprés resolution");
-    // setWidgetFont(labelEntre,100);
-
-    menu = MakeMenu("Option");
-    MakeMenuItem(menu, "Import Matrice", importMatrice, NULL);
-    MakeMenuItem(menu, "Import Vecteur", importVecteur, NULL);
+    BFichierMatrice = MakeButton(" Fichier Matrice ", ChargerMatrice, d);
+    BFichierVecteur = MakeButton(" Fichier Vecteur ", ChargerVecteur, d);
+    BResolve = MakeButton("Resoudre", SolutionSysteme, d);
 
     // Placement des boutons dans la fenêtre graphique
-    SetWidgetPos(labelEntre, PLACE_UNDER, menu, NO_CARE, NULL);
+    SetWidgetPos(BResolve, PLACE_RIGHT, BFichierMatrice, NO_CARE, NULL);
 
-    SetWidgetPos(BResolve, PLACE_RIGHT, menu, NO_CARE, NULL);
-    SetWidgetPos(BQuit, PLACE_RIGHT, BResolve, NO_CARE, NULL);
+    SetWidgetPos(textBoxMatrice, PLACE_UNDER, BFichierMatrice, NO_CARE, NULL);
+    SetWidgetPos(textBoxVecteur, PLACE_UNDER, BFichierMatrice, PLACE_RIGHT, textBoxMatrice);
+    SetWidgetPos(ZoneResultat, PLACE_RIGHT, BFichierMatrice, NO_CARE, NULL);
+    SetWidgetPos(BFichierVecteur, PLACE_RIGHT, BFichierMatrice, NO_CARE, NULL);
 
-    SetWidgetPos(textBoxMatrice, PLACE_UNDER, labelEntre, NO_CARE, NULL);
-    SetWidgetPos(textBoxVecteur, PLACE_UNDER, labelEntre, PLACE_RIGHT, textBoxMatrice);
-    SetWidgetPos(ZoneResultat, PLACE_UNDER, labelEntre, PLACE_RIGHT, textBoxVecteur);
-
-    SetWidgetPos(labelSortie, PLACE_UNDER, menu, PLACE_RIGHT, labelEntre);
-
+    AttachEdge(BQuit, BOTTOM_EDGE, ATTACH_BOTTOM);
     // pour gérer les couleurs
     GetStandardColors();
 

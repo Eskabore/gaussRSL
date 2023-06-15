@@ -5,49 +5,51 @@
 #include "vue.h"
 #include "callbacks.h"
 
+int checkMat = 0;
+int checkVect = 0;
+
+void ChargerMatriceDepuisFichierCallback(char *cheminFichier)
+{
+    ChargerMatriceDepuisFichier(cheminFichier);
+}
+
 // Callback bouton quit. Rôle : terminer l’application
 void quit(Widget w, void *d)
 {
-    equation *eq = (equation *)d;
-    libererMatrice(&(eq->A));
-    libererVecteur(&(eq->B));
-    libererVecteur(&(eq->X));
     exit(EXIT_SUCCESS);
 }
-
-
 
 // Ouvrir le fichier qui contient la matrice A pour l'afficher.
 void ChargerMatrice(Widget w, void *d)
 {
     equation *eq = (equation *)d;
-    char *fileNameM = GetFile("Choisir matrice A", ".", NULL, NULL); // Choisir un fichier.
+    char *fileNameM = GetFile("Choisir matrice A", ".", NULL, NULL); 
     eq->A = ChargerMatriceDepuisFichier(fileNameM);
-    AfficherMatriceDansFenetre(matrixLabel, &(eq->A));
+    SetTextWidgetText(textBoxMatrice, fileNameM, 1);
+    checkMat = 1;
 }
 
 // Ouvrir le fichier qui contient le vecteur B pour l'afficher.
 void ChargerVecteur(Widget w, void *d)
 {
     equation *eq = (equation *)d;
-    char *fileNameM = GetFile("Choisir vecteur B", ".", NULL, NULL); // Choisir un fichier.
+    char *fileNameM = GetFile("Choisir vecteur B", ".", NULL, NULL);
     eq->B = ChargerVecteurDepuisFichier(fileNameM);
-    AfficherVecteurDansFenetre(vecteurLabel, &(eq->B));
+    SetTextWidgetText(textBoxVecteur, fileNameM, 1);
+    checkVect = 1;
 }
 
-// Résoudre le système et afficher la solution X.
+// Resolution du systeme d'equation par pivot de gauss.
 void SolutionSysteme(Widget w, void *d)
 {
     equation *eq = (equation *)d;
-
-    // Initialiser le vecteur X
-    initVecteur(&(eq->X), getNbLignes(eq->A));
-
-    // Résoudre le système avec la méthode de Gauss et stocker le résultat dans eq->X
-    GaussRSL(eq->A, eq->B, &(eq->X));
-
-    // Affichez le vecteur solution dans l'interface utilisateur
-    char *chaine = VecteurEnChaine(eq->X);
-    SetLabel(solutionLabel, chaine);
-    free(chaine); // Libérer la mémoire allouée pour la chaîne
+    if (checkMat == 0 || checkVect == 0)
+    {
+        printf("Erreur : Veuillez d'abord choisir une matrice et un vecteur\n");
+    }
+    else
+    {
+        SolutionEtAffichage(w, d);
+        SetTextWidgetText(ZoneResultat, VecteurEnChaine(eq->X), 0);
+    }
 }

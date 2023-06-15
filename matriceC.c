@@ -2,24 +2,33 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "matriceC.h"
+#include "liste.h"
+
+
 
 // Renvoie une matrice creuse nulle de taille m x n
 matrice_creuse matriceCreuseNulle(const int m, const int n)
 {
+    if (m <= 0 || n <= 0)
+    {
+        printf("Erreur : les dimensions de la matrice doivent être strictement positives\n");
+        assert(m > 0 && n > 0); // Arrête le programme
+    }
+
     matrice_creuse mc;
     mc.nbl = m;
     mc.nbc = n;
-    mc.mat = NULL; // Initialise la liste à NULL
+    mc.mat = initListe(); // Initialise la liste à NULL
     return mc;
 }
 
 // Renvoie l'élément à la position (i, j) de la matrice creuse m
-T getM_Creuse(const matrice_creuse m, const int i, const int j)
+T getM_Creuse(const matrice_creuse *m, const int i, const int j)
 {
-    assert(i >= 0 && i < m.nbl);
-    assert(j >= 0 && j < m.nbc);
+    assert(i >= 0 && i < m->nbl);
+    assert(j >= 0 && j < m->nbc);
 
-    Liste elements = m.mat;
+    Liste elements = m->mat;
     while (elements != NULL)
     {
         Triplet *e = (Triplet *)elements->elt;
@@ -82,7 +91,7 @@ void ecrireMatrice_Creuse(const matrice_creuse m)
     {
         for (int j = 0; j < m.nbc; j++)
         {
-            printf("%.2f ", getM_Creuse(m, i, j));
+            printf("%.2f ", getM_Creuse(&m, i, j));
         }
         printf("\n");
     }
@@ -105,4 +114,14 @@ void libererListe(Liste *l)
         free(temp->elt); // Supposant que elt est un pointeur
         free(temp);
     }
+}
+
+int getNbLignes_Creuse(matrice_creuse mc)
+{
+    return mc.nbl;
+}
+
+int getNbCols_Creuse(matrice_creuse mc)
+{
+    return mc.nbc;
 }

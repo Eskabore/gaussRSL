@@ -19,13 +19,13 @@ vecteur vecteurNul(const int n)
 }
 
 // Renvoie l’élément v(i)
-double getV(const vecteur v, const int i)
+T getV(const vecteur v, const int i)
 {
     return v.vec[i];
 }
 
 // v(i) = x
-void setV(vecteur *v, const int i, const double x)
+void setV(vecteur *v, const int i, const T x)
 {
     if (i >= v->taille)
     {

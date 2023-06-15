@@ -1,14 +1,34 @@
 CC = gcc
-CFLAGS = -Wall -I/usr/local/sx/include
-LDFLAGS = -L/usr/local/sx/lib
-LIBS = -lsx -lX11 -lXt 
+CFLAGS = -Wall -pedantic
+LDFLAGS = -lsx
+SRCS = main.c vue.c callbacks.c data.c matrice.c matriceC.c vecteur.c liste.c
+
+
+EXEC = main
+OBJS = $(SRCS:.c=.o)
+
+
+all: $(EXEC)
+
+$(EXEC): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+main.o: data.h vue.h
+vue.o: vue.h data.h callbacks.h
+callbacks.o: data.h callbacks.h vue.h
+data.o: matrice.h matriceC.h vecteur.h data.h liste.h
+matrice.o: matrice.h
+vecteur.o: vecteur.h
+matriceC.o: matriceC.h liste.h
+liste.o: liste.h
+
+
+%.o: %.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+
 
 .PHONY: all clean
 
-all: main
-
-main: main.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
 clean:
-	rm -f main
+	rm -rf *.o $(EXEC)

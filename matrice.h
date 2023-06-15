@@ -1,3 +1,5 @@
+#pragma once
+
 // Structure matrice
 typedef double T;
 

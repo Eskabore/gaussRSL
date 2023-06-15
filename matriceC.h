@@ -1,3 +1,5 @@
+#pragma once
+
 #include "liste.h"
 
 typedef double T;
@@ -16,7 +18,7 @@ typedef struct
 extern matrice_creuse matriceCreuseNulle(const int m, const int n);
 
 // Fonction pour obtenir l'élément à la position (i, j) de la matrice creuse m
-extern T getM_Creuse(const matrice_creuse m, const int i, const int j);
+extern T getM_Creuse(const matrice_creuse *m, const int i, const int j);
 
 // Fonction pour définir l'élément à la position (i, j) de la matrice creuse m à la valeur x
 extern void setM_Creuse(matrice_creuse *m, const int i, const int j, const T x);
@@ -32,3 +34,11 @@ extern void libererMatrice_Creuse(matrice_creuse *m);
 
 // libere liste
 extern void libererListe(Liste *l);
+
+extern int getNbLignes_Creuse(matrice_creuse mc);
+
+extern int getNbCols_Creuse(matrice_creuse mc);
+    /*
+    // Fonction pour convertir une matrice dense en matrice creuse
+    matrice_creuse convertirCreuseVersDense(matrice_creuse mc);
+    */
