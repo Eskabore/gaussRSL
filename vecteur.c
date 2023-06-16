@@ -2,22 +2,6 @@
 #include <stdlib.h>
 #include "vecteur.h"
 
-// Renvoie un vecteur de taille n initialisé à 0
-vecteur vecteurNul(const int n)
-{
-    vecteur v;
-    v.taille = n;
-    v.vec = (double *)calloc(n, sizeof(double));
-
-    if (v.vec == NULL)
-    {
-        fprintf(stderr, "Erreur : échec de l'allocation de mémoire pour le vecteur.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    return v;
-}
-
 // Renvoie l’élément v(i)
 T getV(const vecteur v, const int i)
 {

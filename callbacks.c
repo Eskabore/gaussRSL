@@ -8,11 +8,6 @@
 int checkMat = 0;
 int checkVect = 0;
 
-void ChargerMatriceDepuisFichierCallback(char *cheminFichier)
-{
-    ChargerMatriceDepuisFichier(cheminFichier);
-}
-
 // Callback bouton quit. Rôle : terminer l’application
 void quit(Widget w, void *d)
 {
